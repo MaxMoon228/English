@@ -3,3 +3,7 @@ djangorestframework>=3.17
 django-cors-headers>=4.9
 python-dotenv>=1.2
 Pillow>=12.1
+gunicorn>=23.0
+whitenoise>=6.9
+dj-database-url>=2.3
+psycopg2-binary>=2.9

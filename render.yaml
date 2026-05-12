@@ -1,0 +1,45 @@
+databases:
+  - name: english-db
+    databaseName: english_db
+    user: english_db_user
+    plan: free
+
+services:
+  - type: web
+    name: english-backend
+    runtime: python
+    rootDir: backend
+    plan: free
+    buildCommand: sh build.sh
+    startCommand: gunicorn config.wsgi:application
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: english-db
+          property: connectionString
+      - key: DJANGO_SECRET_KEY
+        generateValue: true
+      - key: DJANGO_DEBUG
+        value: "0"
+      - key: DJANGO_ALLOWED_HOSTS
+        value: english-backend.onrender.com
+      - key: CORS_ALLOWED_ORIGINS
+        value: https://english-frontend.onrender.com
+      - key: CSRF_TRUSTED_ORIGINS
+        value: https://english-frontend.onrender.com
+
+  - type: web
+    name: english-frontend
+    runtime: static
+    plan: free
+    buildCommand: npm ci && npm run build
+    staticPublishPath: dist
+    envVars:
+      - key: VITE_API_BASE_URL
+        value: https://english-backend.onrender.com/api
+      - key: VITE_PUBLIC_BASE
+        value: /
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html

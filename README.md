@@ -104,4 +104,26 @@ Admin:
 Важно:
 - GitHub Pages публикует только статический фронтенд.
 - Для полноценной работы admin/auth/upload нужен отдельно развернутый Django backend (Render/Railway/VPS и т.д.).
+
+## 9) Публикация на Render
+
+В репозитории добавлен `render.yaml` для деплоя backend + frontend + PostgreSQL.
+
+### Как запустить
+
+1. В Render выберите **New -> Blueprint** и укажите репозиторий `MaxMoon228/English`.
+2. Render автоматически поднимет:
+   - PostgreSQL: `english-db`
+   - Django API: `english-backend`
+   - Static frontend: `english-frontend`
+3. После первого деплоя откройте Shell у backend-сервиса и выполните:
+   ```bash
+   python manage.py seed_from_mock --reset
+   python manage.py createsuperuser
+   ```
+
+### Важно для frontend base path
+
+- По умолчанию для GitHub Pages используется `VITE_PUBLIC_BASE=/English/`.
+- В Render для `english-frontend` уже задан `VITE_PUBLIC_BASE=/`, поэтому роутинг работает на корневом домене Render.
   
